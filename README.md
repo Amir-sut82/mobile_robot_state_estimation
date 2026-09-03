@@ -23,7 +23,7 @@ Use the ROS distribution name installed on your machine wherever `<ros_distro>` 
 source /opt/ros/<ros_distro>/setup.bash
 mkdir -p ~/robotic_ws
 cd ~/robotic_ws
-git clone https://github.com/Amir-sut82/robotic_ws.git
+git clone https://github.com/Amir-sut82/robotic_ws.git .
 sudo apt update
 sudo apt install -y python3-rosdep
 # Run these two commands once per machine if rosdep is not initialized:
