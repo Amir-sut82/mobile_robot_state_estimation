@@ -11,8 +11,8 @@ def generate_launch_description():
     default_model_path = os.path.join(pkg_share, 'src', 'description', 'robot.urdf')
     default_rviz_config_path = os.path.join(pkg_share, 'rviz', 'display.rviz')
     
-    with open(default_model_path, 'r') as infp:
-        robot_desc = infp.read()
+    model_path = LaunchConfiguration('model')
+    robot_description = Command(['cat ', model_path])
 
 
     robot_state_publisher_node = Node(
@@ -21,21 +21,22 @@ def generate_launch_description():
         name='robot_state_publisher',
         output = 'screen',
         parameters=[
-        {'use_time_sim': True},
-        {'robot_description': robot_desc}
-    	])
+            {'use_sim_time': False},
+            {'robot_description': robot_description}
+        ])
     
     joint_state_publisher_node = Node(
         package='joint_state_publisher',
         executable='joint_state_publisher',
         name='joint_state_publisher',
-        parameters=[{'robot_description': robot_desc}],
+        parameters=[{'robot_description': robot_description}],
         condition=UnlessCondition(LaunchConfiguration('gui')))
         
     joint_state_publisher_gui_node = Node(
         package='joint_state_publisher_gui',
         executable='joint_state_publisher_gui',
         name='joint_state_publisher_gui',
+        parameters=[{'robot_description': robot_description}],
         condition=IfCondition(LaunchConfiguration('gui'))
     )
     rviz_node = Node(
@@ -55,3 +56,4 @@ def generate_launch_description():
         robot_state_publisher_node,
         rviz_node, 
     ])
+
